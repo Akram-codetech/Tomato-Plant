@@ -278,24 +278,26 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
         });
     }
 
-    // ---- Navbar show/hide (smooth) ----
-    ScrollTrigger.create({
-        trigger: '.hero-section',
-        start: 'top top',
-        end: 'bottom top',
-        onUpdate: (self) => {
-            const progress = self.progress;
-            const navbar = document.getElementById('navbar');
-            if (navbar) {
-                gsap.to(navbar, {
-                    y: progress > 0.08 ? 0 : -100,
-                    duration: 0.6,
-                    ease: silkEase,
-                    overwrite: true
-                });
+    // ---- Navbar show/hide (desktop only — always visible on mobile) ----
+    if (!isMobile) {
+        ScrollTrigger.create({
+            trigger: '.hero-section',
+            start: 'top top',
+            end: 'bottom top',
+            onUpdate: (self) => {
+                const progress = self.progress;
+                const navbar = document.getElementById('navbar');
+                if (navbar) {
+                    gsap.to(navbar, {
+                        y: progress > 0.08 ? 0 : -100,
+                        duration: 0.6,
+                        ease: silkEase,
+                        overwrite: true
+                    });
+                }
             }
-        }
-    });
+        });
+    }
 
     // ---- Floating Animation for Hero Visual — ultra gentle ----
     gsap.to('.hero-visual', {

@@ -444,6 +444,7 @@ img {
     position: relative;
     z-index: 2;
     width: 100%;
+    overflow: hidden;
 }
 
 .hero-content {
@@ -633,12 +634,15 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    overflow: hidden;
 }
 
 .three-container {
     width: 100%;
     height: 500px;
     position: relative;
+    min-height: 200px;
 }
 
 .hero-glow {
@@ -1529,19 +1533,23 @@ img {
     .hero-container {
         grid-template-columns: 1fr;
         text-align: center;
-        gap: 32px;
+        gap: 24px;
     }
 
     .hero-content {
         align-items: center;
         gap: 20px;
+        order: 1;
     }
     .hero-subtitle { max-width: 540px; margin: 0 auto; }
     .hero-actions { justify-content: center; }
     .hero-stats { justify-content: center; }
 
-    .hero-visual { order: -1; }
-    .three-container { height: 320px; }
+    .hero-visual {
+        order: 2;
+        width: 100%;
+    }
+    .three-container { height: 300px; width: 100%; }
 
     .steps-grid {
         grid-template-columns: 1fr;
@@ -1601,22 +1609,37 @@ img {
     /* Hero mobile */
     .hero-section {
         min-height: auto;
-        padding: 100px 0 56px;
+        padding: 80px 0 40px;
     }
 
-    .hero-container { gap: 24px; }
+    .hero-container {
+        gap: 20px;
+    }
+
+    .hero-content {
+        order: 1;
+    }
+
+    .hero-visual {
+        order: 2;
+        width: 100%;
+    }
 
     .hero-title {
-        font-size: clamp(28px, 8vw, 44px);
+        font-size: clamp(28px, 8vw, 42px);
         letter-spacing: -1px;
         line-height: 1.1;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     .hero-subtitle {
-        font-size: 15px;
+        font-size: 14px;
         line-height: 1.65;
         max-width: 100%;
         padding: 0 4px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     .hero-badge {
@@ -1628,13 +1651,17 @@ img {
         flex-direction: column;
         width: 100%;
         gap: 12px;
+        padding: 0;
+        box-sizing: border-box;
     }
 
     .btn-primary, .btn-secondary {
         width: 100%;
+        max-width: 100%;
         justify-content: center;
         padding: 14px 24px;
         font-size: 15px;
+        box-sizing: border-box;
         /* Smooth tap feedback */
         transition: transform 0.2s var(--ease-silk), box-shadow 0.2s var(--ease-silk);
     }
@@ -1642,7 +1669,7 @@ img {
     .hero-stats {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+        gap: 10px;
         width: 100%;
         padding-top: 8px;
     }
@@ -1651,18 +1678,18 @@ img {
 
     .stat-item {
         text-align: center;
-        padding: 12px 8px;
+        padding: 12px 6px;
         background: var(--bg-glass);
         border-radius: var(--radius-md);
         border: 1px solid var(--bg-glass-border);
     }
 
-    .stat-number { font-size: 24px; }
-    .stat-suffix { font-size: 18px; }
-    .stat-label { font-size: 11px; }
+    .stat-number { font-size: 22px; }
+    .stat-suffix { font-size: 16px; }
+    .stat-label { font-size: 10px; }
 
-    .three-container { height: 240px; }
-    .hero-glow { width: 200px; height: 200px; }
+    .three-container { height: 260px; width: 100%; }
+    .hero-glow { width: 180px; height: 180px; }
 
     /* Sections mobile */
     .section-header { margin-bottom: 36px; }
@@ -1869,26 +1896,26 @@ img {
         --container-padding: 14px;
     }
 
-    .hero-section { padding: 88px 0 40px; }
+    .hero-section { padding: 72px 0 32px; }
 
     .hero-title {
-        font-size: 26px;
+        font-size: 24px;
         letter-spacing: -0.5px;
     }
 
-    .hero-subtitle { font-size: 14px; }
+    .hero-subtitle { font-size: 13px; }
 
     .hero-stats {
         grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
+        gap: 6px;
     }
 
-    .stat-item { padding: 10px 4px; }
-    .stat-number { font-size: 20px; }
-    .stat-suffix { font-size: 14px; }
-    .stat-label { font-size: 10px; }
+    .stat-item { padding: 8px 4px; }
+    .stat-number { font-size: 18px; }
+    .stat-suffix { font-size: 13px; }
+    .stat-label { font-size: 9px; }
 
-    .three-container { height: 200px; }
+    .three-container { height: 200px; width: 100%; }
 
     .section-title { font-size: 24px; }
     .section-desc { font-size: 14px; }
