@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomato AI — Intelligent Plant Disease Detection</title>
+    <meta name="description" content="AI-powered tomato leaf disease detection using deep learning. Upload a leaf image and get instant diagnosis with prevention recommendations.">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍅</text></svg>">
+</head>
+<body>
+    <!-- Page Loader -->
+    <div id="page-loader" class="page-loader">
+        <div class="loader-inner">
+            <div class="loader-tomato">🍅</div>
+            <div class="loader-bar">
+                <div class="loader-bar-fill"></div>
+            </div>
+            <p class="loader-text">Initializing Tomato AI</p>
+        </div>
+    </div>
+
+    <!-- Cursor Glow -->
+    <div id="cursor-glow" class="cursor-glow"></div>
+
+    <!-- Particles Container -->
+    <div id="tsparticles"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <span class="logo-icon">🍅</span>
+                <span class="logo-text">Tomato<span class="logo-accent">AI</span></span>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="#hero" class="nav-link active">Home</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#detect" class="nav-link">Detect</a>
+                <a href="#insights" class="nav-link">Insights</a>
+            </div>
+            <button class="nav-cta" onclick="smoothScrollTo('#detect')">
+                Try Now
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section id="hero" class="hero-section">
+        <div class="hero-bg-shapes">
+            <div class="hero-shape shape-1"></div>
+            <div class="hero-shape shape-2"></div>
+            <div class="hero-shape shape-3"></div>
+        </div>
+
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge" data-animate="fade-up">
+                    <span class="badge-dot"></span>
+                    Powered by Deep Learning
+                </div>
+                <h1 class="hero-title" data-animate="fade-up">
+                    <span class="title-line">AI Powered</span>
+                    <span class="title-line title-gradient">Tomato Disease</span>
+                    <span class="title-line">Detection</span>
+                </h1>
+                <p class="hero-subtitle" data-animate="fade-up">
+                    Upload a tomato leaf image and our EfficientNet deep learning model instantly identifies diseases with up to 97% accuracy. Get prevention recommendations in seconds.
+                </p>
+                <div class="hero-actions" data-animate="fade-up">
+                    <button class="btn-primary btn-glow" onclick="smoothScrollTo('#detect')">
+                        <span>Start Detection</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <button class="btn-secondary" onclick="smoothScrollTo('#how-it-works')">
+                        <span>Learn More</span>
+                    </button>
+                </div>
+                <div class="hero-stats" data-animate="fade-up">
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="97">0</span><span class="stat-suffix">%</span>
+                        <span class="stat-label">Accuracy</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="5">0</span>
+                        <span class="stat-label">Disease Classes</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="18000">0</span><span class="stat-suffix">+</span>
+                        <span class="stat-label">Images Trained</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual" data-animate="fade-left">
+                <div id="three-container" class="three-container"></div>
+                <div class="hero-glow"></div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator" data-animate="fade-up">
+            <div class="scroll-mouse">
+                <div class="scroll-wheel"></div>
+            </div>
+            <span>Scroll to explore</span>
+        </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section id="how-it-works" class="section how-section">
+        <div class="section-container">
+            <div class="section-header" data-animate="reveal">
+                <span class="section-tag">Simple Process</span>
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-desc">Three simple steps to diagnose your tomato plant health using artificial intelligence.</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card" data-animate="reveal-card" data-delay="0">
+                    <div class="step-number">01</div>
+                    <div class="step-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <path d="M42 30V38C42 39.0609 41.5786 40.0783 40.8284 40.8284C40.0783 41.5786 39.0609 42 38 42H10C8.93913 42 7.92172 41.5786 7.17157 40.8284C6.42143 40.0783 6 39.0609 6 38V30" stroke="url(#uploadGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M34 16L24 6L14 16" stroke="url(#uploadGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M24 6V30" stroke="url(#uploadGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs><linearGradient id="uploadGrad" x1="6" y1="6" x2="42" y2="42"><stop stop-color="#ff6b6b"/><stop offset="1" stop-color="#ff8e53"/></linearGradient></defs>
+                        </svg>
+                    </div>
+                    <h3 class="step-title">Upload Image</h3>
+                    <p class="step-desc">Drag &amp; drop or click to upload a clear photo of your tomato plant leaf.</p>
+                    <div class="step-line"></div>
+                </div>
+
+                <div class="step-card" data-animate="reveal-card" data-delay="0.15">
+                    <div class="step-number">02</div>
+                    <div class="step-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="18" stroke="url(#aiGrad)" stroke-width="3"/>
+                            <path d="M24 14V24L30 30" stroke="url(#aiGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="24" cy="24" r="3" fill="url(#aiGrad)"/>
+                            <defs><linearGradient id="aiGrad" x1="6" y1="6" x2="42" y2="42"><stop stop-color="#a855f7"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
+                        </svg>
+                    </div>
+                    <h3 class="step-title">AI Analysis</h3>
+                    <p class="step-desc">Our EfficientNet model processes the image through neural network layers in milliseconds.</p>
+                    <div class="step-line"></div>
+                </div>
+
+                <div class="step-card" data-animate="reveal-card" data-delay="0.3">
+                    <div class="step-number">03</div>
+                    <div class="step-icon">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <path d="M42 22.08V24C41.9975 28.2832 40.5993 32.4451 38.0126 35.8714C35.426 39.2977 31.7878 41.8068 27.6343 42.9989C23.4808 44.1911 19.0498 43.9041 15.068 42.1834C11.0862 40.4627 7.77376 37.4029 5.63806 33.5699C3.50237 29.737 2.66193 25.336 3.25032 21.0024C3.83872 16.6688 5.82515 12.6384 8.88 9.53117C11.9349 6.42396 15.8929 4.40456 20.2103 3.77282C24.5277 3.14108 28.9697 3.93269 32.86 6.02" stroke="url(#resultGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M42 8L24 26.02L18 20.02" stroke="url(#resultGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs><linearGradient id="resultGrad" x1="3" y1="3" x2="42" y2="44"><stop stop-color="#22c55e"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+                        </svg>
+                    </div>
+                    <h3 class="step-title">Get Results</h3>
+                    <p class="step-desc">Receive disease diagnosis, confidence score, and prevention recommendations instantly.</p>
+                    <div class="step-line"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== DETECTION SECTION ===== -->
+    <section id="detect" class="section detect-section">
+        <div class="section-container">
+            <div class="section-header" data-animate="reveal">
+                <span class="section-tag">Disease Detection</span>
+                <h2 class="section-title">Analyze Your Leaf</h2>
+                <p class="section-desc">Upload a clear image of a tomato leaf — our AI will diagnose any disease in seconds.</p>
+            </div>
+
+            <div class="detect-wrapper">
+                <!-- Upload Area -->
+                <div class="upload-area" id="upload-area" data-animate="reveal-card">
+                    <div class="upload-zone" id="upload-zone">
+                        <div class="upload-zone-inner">
+                            <div class="upload-icon-wrapper">
+                                <svg class="upload-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                                    <path d="M56 40V50.6667C56 52.0812 55.4381 53.4377 54.4379 54.4379C53.4377 55.4381 52.0812 56 50.6667 56H13.3333C11.9188 56 10.5623 55.4381 9.5621 54.4379C8.5619 53.4377 8 52.0812 8 50.6667V40" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M45.3333 21.3333L32 8L18.6667 21.3333" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M32 8V40" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <h3 class="upload-title">Drop your leaf image here</h3>
+                            <p class="upload-hint">or click to browse files</p>
+                            <p class="upload-formats">Supports JPG, PNG, WebP — Max 16MB</p>
+                            <input type="file" id="file-input" accept="image/*" hidden>
+                        </div>
+                    </div>
+
+                    <!-- Preview -->
+                    <div class="preview-area" id="preview-area" style="display:none;">
+                        <div class="preview-image-wrapper">
+                            <img id="preview-image" class="preview-image" alt="Uploaded leaf">
+                            <button class="preview-remove" id="preview-remove" aria-label="Remove image">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            </button>
+                        </div>
+                        <p class="preview-filename" id="preview-filename"></p>
+                        <button class="btn-primary btn-analyze" id="analyze-btn">
+                            <span class="btn-text">Analyze Leaf</span>
+                            <span class="btn-loader" style="display:none;">
+                                <svg class="spinner" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2.5" fill="none" stroke-dasharray="50" stroke-linecap="round"/></svg>
+                                Analyzing...
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Result Area -->
+                <div class="result-area" id="result-area" style="display:none;" data-animate="reveal-card">
+                    <div class="result-card" id="result-card">
+                        <!-- Status Header -->
+                        <div class="result-status" id="result-status">
+                            <div class="result-status-icon" id="result-status-icon"></div>
+                            <h3 class="result-disease" id="result-disease"></h3>
+                            <div class="result-severity" id="result-severity"></div>
+                        </div>
+
+                        <!-- Confidence -->
+                        <div class="result-confidence">
+                            <div class="confidence-header">
+                                <span>Confidence</span>
+                                <span class="confidence-value" id="confidence-value">0%</span>
+                            </div>
+                            <div class="confidence-bar">
+                                <div class="confidence-bar-fill" id="confidence-bar-fill"></div>
+                            </div>
+                        </div>
+
+                        <!-- All Predictions -->
+                        <div class="result-predictions" id="result-predictions">
+                            <h4>All Predictions</h4>
+                            <div class="predictions-list" id="predictions-list"></div>
+                        </div>
+
+                        <!-- Prevention -->
+                        <div class="result-prevention" id="result-prevention">
+                            <h4>
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1L12.39 6.26L18.18 7.27L14.09 11.74L14.81 17.64L10 15.27L5.19 17.64L5.91 11.74L1.82 7.27L7.61 6.26L10 1Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                                <span id="prevention-title">Prevention Measures</span>
+                            </h4>
+                            <ul class="prevention-list" id="prevention-list"></ul>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="result-actions">
+                            <button class="btn-secondary btn-reset" id="reset-btn">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1.5 1.5V6.75H6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.51 11.25C4.01717 12.6063 4.95418 13.758 6.17778 14.5279C7.40138 15.2977 8.84348 15.6436 10.2812 15.5134C11.7189 15.3833 13.0746 14.7842 14.1376 13.8091C15.2006 12.834 15.9112 11.5367 16.1602 10.1176C16.4093 8.69844 16.1832 7.23546 15.517 5.95418C14.8507 4.6729 13.7824 3.64302 12.4773 3.02419C11.1722 2.40536 9.70179 2.23294 8.29388 2.53344C6.88596 2.83394 5.61779 3.59074 4.68 4.68L1.5 6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                Try Another
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== AI INSIGHTS SECTION ===== -->
+    <section id="insights" class="section insights-section">
+        <div class="section-container">
+            <div class="section-header" data-animate="reveal">
+                <span class="section-tag">Behind The Model</span>
+                <h2 class="section-title">AI Insights</h2>
+                <p class="section-desc">Our deep learning model is trained on thousands of tomato leaf images for reliable disease detection.</p>
+            </div>
+
+            <div class="insights-grid">
+                <div class="insight-card" data-animate="reveal-card" data-delay="0">
+                    <div class="insight-icon">🧠</div>
+                    <h3>EfficientNetB1</h3>
+                    <p>State-of-the-art convolutional neural network architecture optimized for image classification with transfer learning.</p>
+                </div>
+                <div class="insight-card" data-animate="reveal-card" data-delay="0.1">
+                    <div class="insight-icon">📊</div>
+                    <h3>Two-Phase Training</h3>
+                    <p>Feature extraction followed by fine-tuning ensures the model adapts perfectly to tomato leaf disease patterns.</p>
+                </div>
+                <div class="insight-card" data-animate="reveal-card" data-delay="0.2">
+                    <div class="insight-icon">🔬</div>
+                    <h3>192×192 Resolution</h3>
+                    <p>Optimized input resolution balances accuracy and speed, enabling real-time predictions on any device.</p>
+                </div>
+                <div class="insight-card" data-animate="reveal-card" data-delay="0.3">
+                    <div class="insight-icon">🛡️</div>
+                    <h3>Leaf Validation</h3>
+                    <p>Built-in computer vision checks ensure only genuine leaf images are processed, preventing false predictions.</p>
+                </div>
+            </div>
+
+            <!-- Counter Stats -->
+            <div class="stats-row" data-animate="reveal">
+                <div class="stats-card">
+                    <div class="stats-icon">🎯</div>
+                    <span class="stats-number" data-count="97">0</span><span class="stats-suffix">%</span>
+                    <span class="stats-label">Model Accuracy</span>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-icon">🧬</div>
+                    <span class="stats-number" data-count="5">0</span>
+                    <span class="stats-label">Disease Classes</span>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-icon">📸</div>
+                    <span class="stats-number" data-count="18000">0</span><span class="stats-suffix">+</span>
+                    <span class="stats-label">Training Images</span>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-icon">⚡</div>
+                    <span class="stats-number" data-count="15">0</span>
+                    <span class="stats-label">Epochs Trained</span>
+                </div>
+            </div>
+
+            <!-- Disease Cards -->
+            <div class="diseases-showcase" data-animate="reveal">
+                <h3 class="showcase-title">Diseases We Detect</h3>
+                <div class="diseases-grid">
+                    <div class="disease-card disease-card--danger">
+                        <div class="disease-indicator"></div>
+                        <h4>Early Blight</h4>
+                        <p>Caused by <em>Alternaria solani</em>. Dark concentric lesions on older leaves.</p>
+                    </div>
+                    <div class="disease-card disease-card--danger">
+                        <div class="disease-indicator"></div>
+                        <h4>Late Blight</h4>
+                        <p>Caused by <em>Phytophthora infestans</em>. Water-soaked spots that spread rapidly.</p>
+                    </div>
+                    <div class="disease-card disease-card--warning">
+                        <div class="disease-indicator"></div>
+                        <h4>Yellow Leaf Curl</h4>
+                        <p>Viral disease transmitted by whiteflies causing leaf curling and yellowing.</p>
+                    </div>
+                    <div class="disease-card disease-card--warning">
+                        <div class="disease-indicator"></div>
+                        <h4>Mosaic Virus</h4>
+                        <p>Causes mottled light and dark green pattern on leaves reducing yield.</p>
+                    </div>
+                    <div class="disease-card disease-card--success">
+                        <div class="disease-indicator"></div>
+                        <h4>Healthy</h4>
+                        <p>No disease detected. Plant shows normal growth and development patterns.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <span class="logo-icon">🍅</span>
+                    <span class="logo-text">Tomato<span class="logo-accent">AI</span></span>
+                    <p class="footer-tagline">Protecting tomato crops with artificial intelligence</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#hero">Home</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#detect">Detect</a>
+                    <a href="#insights">Insights</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Tomato AI — Built with TensorFlow &amp; Flask</p>
+                <p class="footer-credit">Developed by <strong>Akram</strong></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles-engine@2.12.0/tsparticles.engine.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.12.0/tsparticles.slim.bundle.min.js"></script>
+
+    <!-- App Scripts -->
+    <script src="/static/js/three-hero.js"></script>
+    <script src="/static/js/animations.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
