@@ -1,21 +1,30 @@
 /* =============================================
    TOMATO AI — GSAP + Lenis Animations
-   Premium scroll-driven experience
+   Ultra-smooth scroll-driven experience
    ============================================= */
+
+// ===== DEVICE DETECTION =====
+const isMobile = window.innerWidth < 769;
+const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ===== LENIS SMOOTH SCROLL =====
 (function initLenis() {
     if (typeof Lenis === 'undefined') return;
 
     const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        duration: isMobile ? 1.6 : 1.4,
+        easing: (t) => {
+            // Custom silk easing — smoother than default
+            return t === 1 ? 1 : 1 - Math.pow(2, -12 * t);
+        },
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 0.8,
-        touchMultiplier: 1.5,
+        wheelMultiplier: isMobile ? 0.6 : 0.8,
+        touchMultiplier: isMobile ? 1.2 : 1.5,
         infinite: false,
+        lerp: isMobile ? 0.08 : 0.1,
     });
 
     // Connect Lenis to GSAP ScrollTrigger
@@ -35,7 +44,7 @@
         requestAnimationFrame(raf);
     }
 
-    // Expose lenis globally for anchor links
+    // Expose lenis globally
     window.__lenis = lenis;
 
     // Handle anchor clicks smoothly via lenis
@@ -44,7 +53,10 @@
             e.preventDefault();
             const target = document.querySelector(anchor.getAttribute('href'));
             if (target) {
-                lenis.scrollTo(target, { offset: -60 });
+                lenis.scrollTo(target, {
+                    offset: isMobile ? -40 : -60,
+                    duration: isMobile ? 1.8 : 1.4,
+                });
             }
         });
     });
@@ -53,7 +65,10 @@
     window.smoothScrollTo = function(selector) {
         const el = document.querySelector(selector);
         if (el && window.__lenis) {
-            window.__lenis.scrollTo(el, { offset: -60 });
+            window.__lenis.scrollTo(el, {
+                offset: isMobile ? -40 : -60,
+                duration: isMobile ? 1.8 : 1.4,
+            });
         }
     };
 })();
@@ -64,100 +79,113 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // ---- Hero Section Timeline ----
+    // ---- Global GSAP defaults for silky feel ----
+    gsap.defaults({
+        ease: 'power4.out',
+        overwrite: 'auto',
+    });
+
+    // ---- Custom eases ----
+    const silkEase = 'power4.out';
+    const butterEase = 'expo.out';
+    const springEase = 'elastic.out(0.8, 0.6)';
+
+    // ---- Mobile-friendly durations ----
+    const dur = (desktop, mobile) => isMobile ? mobile : desktop;
+
+    // ---- Hero Section Timeline — buttery entrance ----
     const heroTl = gsap.timeline({
-        defaults: { ease: 'power3.out', duration: 1 },
-        delay: 1 // Wait for page loader
+        defaults: { ease: butterEase, duration: dur(1.2, 1) },
+        delay: 0.8
     });
 
     heroTl
         .fromTo('.hero-badge',
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0 }
+            { opacity: 0, y: 20, filter: 'blur(8px)' },
+            { opacity: 1, y: 0, filter: 'blur(0px)', duration: dur(0.9, 0.7) }
         )
         .fromTo('.title-line',
-            { opacity: 0, y: 60, rotationX: 20 },
-            { opacity: 1, y: 0, rotationX: 0, stagger: 0.12 },
-            '-=0.6'
-        )
-        .fromTo('.hero-subtitle',
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0 },
+            { opacity: 0, y: 50, filter: 'blur(6px)' },
+            {
+                opacity: 1, y: 0, filter: 'blur(0px)',
+                stagger: dur(0.1, 0.08),
+                duration: dur(1.1, 0.9),
+                ease: silkEase
+            },
             '-=0.5'
         )
+        .fromTo('.hero-subtitle',
+            { opacity: 0, y: 24, filter: 'blur(4px)' },
+            { opacity: 1, y: 0, filter: 'blur(0px)', duration: dur(1, 0.8) },
+            '-=0.6'
+        )
         .fromTo('.hero-actions',
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0 },
-            '-=0.4'
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: dur(0.8, 0.7) },
+            '-=0.5'
         )
         .fromTo('.hero-stats',
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0 },
-            '-=0.3'
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: dur(0.8, 0.7) },
+            '-=0.4'
         )
         .fromTo('.hero-visual',
-            { opacity: 0, x: 60, scale: 0.9 },
-            { opacity: 1, x: 0, scale: 1, duration: 1.2 },
-            '-=1'
+            { opacity: 0, x: isMobile ? 0 : 40, scale: 0.92, filter: 'blur(10px)' },
+            {
+                opacity: 1, x: 0, scale: 1, filter: 'blur(0px)',
+                duration: dur(1.4, 1),
+                ease: silkEase
+            },
+            '-=1.2'
         )
         .fromTo('.scroll-indicator',
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0 },
-            '-=0.4'
+            { opacity: 0, y: 10 },
+            { opacity: 1, y: 0, duration: 0.6 },
+            '-=0.3'
         );
+
+    // ---- Helper: create smooth reveal ----
+    function smoothReveal(selector, fromVars, toVars, triggerOptions = {}) {
+        gsap.utils.toArray(selector).forEach(el => {
+            const delay = parseFloat(el.dataset?.delay) || 0;
+            gsap.fromTo(el, fromVars, {
+                ...toVars,
+                delay: delay,
+                scrollTrigger: {
+                    trigger: el,
+                    start: isMobile ? 'top 92%' : 'top 85%',
+                    toggleActions: 'play none none none',
+                    ...triggerOptions,
+                }
+            });
+        });
+    }
 
     // ---- Section Headers ----
-    gsap.utils.toArray('[data-animate="reveal"]').forEach(el => {
-        gsap.fromTo(el,
-            { opacity: 0, y: 50 },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: el,
-                    start: 'top 85%',
-                    toggleActions: 'play none none none'
-                }
-            }
-        );
-    });
+    smoothReveal('[data-animate="reveal"]',
+        { opacity: 0, y: 40, filter: 'blur(4px)' },
+        { opacity: 1, y: 0, filter: 'blur(0px)', duration: dur(1, 0.8), ease: silkEase }
+    );
 
     // ---- Cards Reveal ----
-    gsap.utils.toArray('[data-animate="reveal-card"]').forEach(el => {
-        const delay = parseFloat(el.dataset.delay) || 0;
-        gsap.fromTo(el,
-            { opacity: 0, y: 40, scale: 0.96 },
-            {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                duration: 0.7,
-                delay: delay,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: el,
-                    start: 'top 88%',
-                    toggleActions: 'play none none none'
-                }
-            }
-        );
-    });
+    smoothReveal('[data-animate="reveal-card"]',
+        { opacity: 0, y: 30, scale: 0.97 },
+        { opacity: 1, y: 0, scale: 1, duration: dur(0.9, 0.7), ease: silkEase }
+    );
 
     // ---- Step Cards Stagger ----
     gsap.fromTo('.step-card',
-        { opacity: 0, y: 60, rotationY: 8 },
+        { opacity: 0, y: isMobile ? 40 : 60, rotationY: isMobile ? 0 : 5 },
         {
             opacity: 1,
             y: 0,
             rotationY: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: 'power3.out',
+            duration: dur(1, 0.8),
+            stagger: dur(0.12, 0.08),
+            ease: silkEase,
             scrollTrigger: {
                 trigger: '.steps-grid',
-                start: 'top 80%',
+                start: isMobile ? 'top 92%' : 'top 80%',
                 toggleActions: 'play none none none'
             }
         }
@@ -165,17 +193,17 @@
 
     // ---- Insight Cards Stagger ----
     gsap.fromTo('.insight-card',
-        { opacity: 0, y: 50, scale: 0.9 },
+        { opacity: 0, y: 35, scale: 0.95 },
         {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: 'power3.out',
+            duration: dur(0.8, 0.65),
+            stagger: dur(0.08, 0.06),
+            ease: silkEase,
             scrollTrigger: {
                 trigger: '.insights-grid',
-                start: 'top 82%',
+                start: isMobile ? 'top 92%' : 'top 82%',
                 toggleActions: 'play none none none'
             }
         }
@@ -183,17 +211,17 @@
 
     // ---- Stats Cards ----
     gsap.fromTo('.stats-card',
-        { opacity: 0, y: 40, scale: 0.92 },
+        { opacity: 0, y: 30, scale: 0.95 },
         {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: 'power3.out',
+            duration: dur(0.8, 0.65),
+            stagger: dur(0.08, 0.06),
+            ease: silkEase,
             scrollTrigger: {
                 trigger: '.stats-row',
-                start: 'top 82%',
+                start: isMobile ? 'top 92%' : 'top 82%',
                 toggleActions: 'play none none none'
             }
         }
@@ -201,17 +229,17 @@
 
     // ---- Disease Cards ----
     gsap.fromTo('.disease-card',
-        { opacity: 0, y: 30, scale: 0.95 },
+        { opacity: 0, y: 25, scale: 0.97 },
         {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.5,
-            stagger: 0.08,
-            ease: 'power3.out',
+            duration: dur(0.7, 0.55),
+            stagger: dur(0.06, 0.05),
+            ease: silkEase,
             scrollTrigger: {
                 trigger: '.diseases-grid',
-                start: 'top 85%',
+                start: isMobile ? 'top 92%' : 'top 85%',
                 toggleActions: 'play none none none'
             }
         }
@@ -219,36 +247,38 @@
 
     // ---- Upload Zone ----
     gsap.fromTo('.upload-zone',
-        { opacity: 0, y: 40, scale: 0.95 },
+        { opacity: 0, y: 30, scale: 0.97 },
         {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.8,
-            ease: 'power3.out',
+            duration: dur(1, 0.8),
+            ease: silkEase,
             scrollTrigger: {
                 trigger: '.upload-zone',
-                start: 'top 85%',
+                start: isMobile ? 'top 92%' : 'top 85%',
                 toggleActions: 'play none none none'
             }
         }
     );
 
-    // ---- Parallax Background Shapes ----
-    gsap.utils.toArray('.hero-shape').forEach((shape, i) => {
-        gsap.to(shape, {
-            y: (i + 1) * -80,
-            ease: 'none',
-            scrollTrigger: {
-                trigger: '.hero-section',
-                start: 'top top',
-                end: 'bottom top',
-                scrub: 1.5
-            }
+    // ---- Parallax Background Shapes (desktop only) ----
+    if (!isMobile) {
+        gsap.utils.toArray('.hero-shape').forEach((shape, i) => {
+            gsap.to(shape, {
+                y: (i + 1) * -60,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '.hero-section',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 2.5
+                }
+            });
         });
-    });
+    }
 
-    // ---- Navbar Parallax ----
+    // ---- Navbar show/hide (smooth) ----
     ScrollTrigger.create({
         trigger: '.hero-section',
         start: 'top top',
@@ -257,26 +287,34 @@
             const progress = self.progress;
             const navbar = document.getElementById('navbar');
             if (navbar) {
-                navbar.style.transform = `translateY(${progress > 0.1 ? 0 : -100}%)`;
+                gsap.to(navbar, {
+                    y: progress > 0.08 ? 0 : -100,
+                    duration: 0.6,
+                    ease: silkEase,
+                    overwrite: true
+                });
             }
         }
     });
 
-    // ---- Floating Animation for Hero Visual ----
+    // ---- Floating Animation for Hero Visual — ultra gentle ----
     gsap.to('.hero-visual', {
-        y: 15,
-        duration: 3,
+        y: isMobile ? 8 : 12,
+        duration: isMobile ? 4 : 3.5,
         ease: 'sine.inOut',
         repeat: -1,
-        yoyo: true
+        yoyo: true,
+        force3D: true,
     });
 
     // ---- Footer Reveal ----
     gsap.fromTo('.footer',
-        { opacity: 0 },
+        { opacity: 0, y: 20 },
         {
             opacity: 1,
-            duration: 0.6,
+            y: 0,
+            duration: dur(0.8, 0.6),
+            ease: silkEase,
             scrollTrigger: {
                 trigger: '.footer',
                 start: 'top 95%',
@@ -285,54 +323,80 @@
         }
     );
 
-    // ---- Magnetic Button Effect ----
-    document.querySelectorAll('.btn-primary, .nav-cta').forEach(btn => {
-        btn.addEventListener('mousemove', (e) => {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            gsap.to(btn, {
-                x: x * 0.15,
-                y: y * 0.15,
-                duration: 0.3,
-                ease: 'power2.out'
+    // ---- DESKTOP ONLY: Magnetic Button Effect ----
+    if (!isTouch) {
+        document.querySelectorAll('.btn-primary, .nav-cta').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                gsap.to(btn, {
+                    x: x * 0.12,
+                    y: y * 0.12,
+                    duration: 0.5,
+                    ease: 'power3.out'
+                });
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, {
+                    x: 0,
+                    y: 0,
+                    duration: 0.8,
+                    ease: springEase
+                });
             });
         });
+    }
 
-        btn.addEventListener('mouseleave', () => {
-            gsap.to(btn, {
-                x: 0,
-                y: 0,
-                duration: 0.5,
-                ease: 'elastic.out(1, 0.5)'
+    // ---- DESKTOP ONLY: Tilt Effect on Cards ----
+    if (!isTouch) {
+        document.querySelectorAll('.step-card, .insight-card, .stats-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+                gsap.to(card, {
+                    rotationY: x * 6,
+                    rotationX: -y * 6,
+                    transformPerspective: 1000,
+                    duration: 0.6,
+                    ease: 'power3.out',
+                    force3D: true,
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, {
+                    rotationY: 0,
+                    rotationX: 0,
+                    duration: 1,
+                    ease: springEase,
+                    force3D: true,
+                });
             });
         });
-    });
+    }
 
-    // ---- Tilt Effect on Cards ----
-    document.querySelectorAll('.step-card, .insight-card, .stats-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-            gsap.to(card, {
-                rotationY: x * 8,
-                rotationX: -y * 8,
-                transformPerspective: 800,
-                duration: 0.4,
-                ease: 'power2.out'
-            });
+    // ---- Smooth section fade-in on scroll (mobile extra polish) ----
+    if (isMobile) {
+        gsap.utils.toArray('section').forEach(section => {
+            gsap.fromTo(section,
+                { opacity: 0.3 },
+                {
+                    opacity: 1,
+                    duration: 0.6,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 95%',
+                        end: 'top 60%',
+                        scrub: 1,
+                    }
+                }
+            );
         });
-
-        card.addEventListener('mouseleave', () => {
-            gsap.to(card, {
-                rotationY: 0,
-                rotationX: 0,
-                duration: 0.6,
-                ease: 'elastic.out(1, 0.6)'
-            });
-        });
-    });
+    }
 
 })();

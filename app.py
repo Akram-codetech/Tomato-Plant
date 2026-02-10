@@ -1,4 +1,8 @@
 import os
+
+# Use legacy Keras 2 for compatibility with models trained on TF 2.15
+os.environ["TF_USE_LEGACY_KERAS"] = "1"
+
 import uuid
 import numpy as np
 import cv2

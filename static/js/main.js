@@ -10,31 +10,33 @@ function smoothScrollTo(selector) {
     }
 }
 
-// ===== PAGE LOADER =====
+// ===== PAGE LOADER (faster on mobile) =====
 (function initLoader() {
     const loader = document.getElementById('page-loader');
     const fill = loader?.querySelector('.loader-bar-fill');
+    const isMobile = window.innerWidth < 769;
     let progress = 0;
 
     const interval = setInterval(() => {
-        progress += Math.random() * 20 + 5;
+        progress += Math.random() * (isMobile ? 30 : 20) + 8;
         if (progress > 95) progress = 95;
         if (fill) fill.style.width = progress + '%';
-    }, 200);
+    }, isMobile ? 120 : 200);
 
     window.addEventListener('load', () => {
         clearInterval(interval);
         if (fill) fill.style.width = '100%';
         setTimeout(() => {
             loader?.classList.add('loaded');
-        }, 600);
+        }, isMobile ? 350 : 500);
     });
 })();
 
-// ===== CURSOR GLOW =====
+// ===== CURSOR GLOW (desktop only, silky smooth) =====
 (function initCursorGlow() {
     const glow = document.getElementById('cursor-glow');
-    if (!glow || window.innerWidth < 769) return;
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (!glow || window.innerWidth < 769 || isTouch) return;
 
     let mouseX = 0, mouseY = 0;
     let glowX = 0, glowY = 0;
@@ -42,13 +44,13 @@ function smoothScrollTo(selector) {
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-    });
+    }, { passive: true });
 
     function animate() {
-        glowX += (mouseX - glowX) * 0.08;
-        glowY += (mouseY - glowY) * 0.08;
-        glow.style.left = glowX + 'px';
-        glow.style.top = glowY + 'px';
+        // Ultra-smooth lerp factor
+        glowX += (mouseX - glowX) * 0.06;
+        glowY += (mouseY - glowY) * 0.06;
+        glow.style.transform = `translate3d(${glowX - 200}px, ${glowY - 200}px, 0)`;
         requestAnimationFrame(animate);
     }
     animate();
@@ -61,17 +63,24 @@ function smoothScrollTo(selector) {
     const navLinks = document.getElementById('nav-links');
     const links = navLinks?.querySelectorAll('.nav-link');
 
-    // Scroll effect
+    // Scroll effect — throttled for mobile perf
     let lastScroll = 0;
+    let scrollTicking = false;
     window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
-        if (scrollY > 50) {
-            navbar?.classList.add('scrolled');
-        } else {
-            navbar?.classList.remove('scrolled');
+        if (!scrollTicking) {
+            requestAnimationFrame(() => {
+                const scrollY = window.scrollY;
+                if (scrollY > 50) {
+                    navbar?.classList.add('scrolled');
+                } else {
+                    navbar?.classList.remove('scrolled');
+                }
+                lastScroll = scrollY;
+                scrollTicking = false;
+            });
+            scrollTicking = true;
         }
-        lastScroll = scrollY;
-    });
+    }, { passive: true });
 
     // Mobile menu
     mobileBtn?.addEventListener('click', () => {
@@ -87,49 +96,59 @@ function smoothScrollTo(selector) {
         });
     });
 
-    // Active link on scroll
+    // Active link on scroll — throttled for performance
     const sections = document.querySelectorAll('section[id]');
+    let activeTicking = false;
     window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY + 100;
-        sections.forEach(section => {
-            const top = section.offsetTop;
-            const height = section.offsetHeight;
-            const id = section.getAttribute('id');
-            const link = navLinks?.querySelector(`a[href="#${id}"]`);
+        if (!activeTicking) {
+            requestAnimationFrame(() => {
+                const scrollY = window.scrollY + 100;
+                sections.forEach(section => {
+                    const top = section.offsetTop;
+                    const height = section.offsetHeight;
+                    const id = section.getAttribute('id');
+                    const link = navLinks?.querySelector(`a[href="#${id}"]`);
 
-            if (scrollY >= top && scrollY < top + height) {
-                links?.forEach(l => l.classList.remove('active'));
-                link?.classList.add('active');
-            }
-        });
-    });
+                    if (scrollY >= top && scrollY < top + height) {
+                        links?.forEach(l => l.classList.remove('active'));
+                        link?.classList.add('active');
+                    }
+                });
+                activeTicking = false;
+            });
+            activeTicking = true;
+        }
+    }, { passive: true });
 })();
 
-// ===== PARTICLES =====
+// ===== PARTICLES (adaptive for mobile) =====
 (function initParticles() {
     if (typeof tsParticles === 'undefined') return;
 
+    const isMobile = window.innerWidth < 769;
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
     tsParticles.load('tsparticles', {
-        fpsLimit: 60,
+        fpsLimit: isMobile ? 30 : 60,
         particles: {
             number: {
-                value: 40,
-                density: { enable: true, area: 1000 }
+                value: isMobile ? 15 : 35,
+                density: { enable: true, area: isMobile ? 1200 : 1000 }
             },
             color: { value: ['#ff453a', '#ff9f0a', '#bf5af2', '#0a84ff'] },
             shape: { type: 'circle' },
             opacity: {
-                value: 0.15,
-                random: { enable: true, minimumValue: 0.05 },
-                animation: { enable: true, speed: 0.5, minimumValue: 0.05, sync: false }
+                value: isMobile ? 0.1 : 0.15,
+                random: { enable: true, minimumValue: 0.03 },
+                animation: { enable: !isMobile, speed: 0.3, minimumValue: 0.03, sync: false }
             },
             size: {
-                value: 2,
+                value: isMobile ? 1.5 : 2,
                 random: { enable: true, minimumValue: 0.5 },
-                animation: { enable: true, speed: 1, minimumValue: 0.5, sync: false }
+                animation: { enable: !isMobile, speed: 0.8, minimumValue: 0.5, sync: false }
             },
             links: {
-                enable: true,
+                enable: !isMobile,
                 distance: 150,
                 color: '#ffffff',
                 opacity: 0.03,
@@ -137,7 +156,7 @@ function smoothScrollTo(selector) {
             },
             move: {
                 enable: true,
-                speed: 0.4,
+                speed: isMobile ? 0.2 : 0.35,
                 direction: 'none',
                 random: true,
                 straight: false,
@@ -147,7 +166,7 @@ function smoothScrollTo(selector) {
         interactivity: {
             detectsOn: 'canvas',
             events: {
-                onHover: { enable: true, mode: 'grab' },
+                onHover: { enable: !isTouch, mode: 'grab' },
                 resize: true
             },
             modes: {
@@ -390,9 +409,14 @@ function smoothScrollTo(selector) {
             }
         }
 
-        // Show result
+        // Show result — smooth slide in
         resultArea.style.display = 'block';
-        resultArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // Use Lenis for smooth scroll if available
+        if (window.__lenis) {
+            window.__lenis.scrollTo(resultArea, { offset: -80, duration: 1.4 });
+        } else {
+            resultArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
     }
 
     function showError(message) {

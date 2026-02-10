@@ -47,9 +47,11 @@
     --container-max: 1200px;
     --container-padding: 24px;
 
-    /* Transitions */
+    /* Transitions — ultra smooth */
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-butter: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-silk: cubic-bezier(0.22, 0.61, 0.36, 1);
 
     /* Border Radius */
     --radius-sm: 8px;
@@ -95,6 +97,9 @@ body {
     overflow-x: hidden;
     line-height: 1.6;
     cursor: default;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    text-rendering: optimizeLegibility;
 }
 
 a {
@@ -186,13 +191,13 @@ img {
     background: radial-gradient(circle, rgba(255, 69, 58, 0.06) 0%, transparent 70%);
     pointer-events: none;
     z-index: 1;
-    transform: translate(-50%, -50%);
-    transition: opacity 0.3s;
     will-change: transform;
+    top: 0;
+    left: 0;
 }
 
 @media (max-width: 768px) {
-    .cursor-glow { display: none; }
+    .cursor-glow { display: none !important; }
 }
 
 /* ===== PARTICLES ===== */
@@ -211,7 +216,8 @@ img {
     right: 0;
     z-index: 1000;
     padding: 16px 0;
-    transition: all 0.4s var(--ease-out);
+    transition: padding 0.5s var(--ease-silk), background 0.5s var(--ease-silk), border-color 0.5s;
+    will-change: padding, background;
 }
 
 .navbar.scrolled {
@@ -762,8 +768,10 @@ img {
     border: 1px solid var(--bg-glass-border);
     border-radius: var(--radius-lg);
     backdrop-filter: blur(20px);
-    transition: all 0.4s var(--ease-out);
+    transition: transform 0.5s var(--ease-silk), border-color 0.5s, box-shadow 0.5s var(--ease-silk);
     overflow: hidden;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .step-card::before {
@@ -867,9 +875,11 @@ img {
     text-align: center;
     background: var(--bg-card);
     backdrop-filter: blur(20px);
-    transition: all 0.4s var(--ease-out);
+    transition: all 0.5s var(--ease-silk);
     cursor: pointer;
     overflow: hidden;
+    will-change: transform, border-color;
+    transform: translateZ(0);
 }
 
 .upload-zone::before {
@@ -1006,7 +1016,8 @@ img {
     border-radius: var(--radius-lg);
     padding: 40px;
     backdrop-filter: blur(20px);
-    animation: resultSlideIn 0.6s var(--ease-out);
+    animation: resultSlideIn 0.8s var(--ease-silk);
+    will-change: transform, opacity;
 }
 
 @keyframes resultSlideIn {
@@ -1284,8 +1295,10 @@ img {
     border: 1px solid var(--bg-glass-border);
     border-radius: var(--radius-lg);
     backdrop-filter: blur(20px);
-    transition: all 0.4s var(--ease-out);
+    transition: transform 0.5s var(--ease-silk), border-color 0.5s, box-shadow 0.5s var(--ease-silk);
     text-align: center;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .insight-card:hover {
@@ -1327,7 +1340,9 @@ img {
     border: 1px solid var(--bg-glass-border);
     border-radius: var(--radius-lg);
     backdrop-filter: blur(20px);
-    transition: all 0.4s var(--ease-out);
+    transition: transform 0.5s var(--ease-silk), box-shadow 0.5s var(--ease-silk);
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .stats-card:hover {
@@ -1393,9 +1408,11 @@ img {
     border-radius: var(--radius-md);
     backdrop-filter: blur(20px);
     text-align: left;
-    transition: all 0.4s var(--ease-out);
+    transition: transform 0.5s var(--ease-silk), border-color 0.5s, box-shadow 0.5s var(--ease-silk);
     position: relative;
     overflow: hidden;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .disease-card:hover {
@@ -1502,102 +1519,496 @@ img {
     background-clip: text;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ===== RESPONSIVE — TABLET ===== */
 @media (max-width: 1024px) {
     :root {
         --section-padding: 80px;
+        --container-padding: 24px;
     }
 
     .hero-container {
         grid-template-columns: 1fr;
         text-align: center;
-        gap: 40px;
+        gap: 32px;
     }
 
-    .hero-content { align-items: center; }
-    .hero-subtitle { max-width: 100%; }
+    .hero-content {
+        align-items: center;
+        gap: 20px;
+    }
+    .hero-subtitle { max-width: 540px; margin: 0 auto; }
     .hero-actions { justify-content: center; }
     .hero-stats { justify-content: center; }
 
     .hero-visual { order: -1; }
-    .three-container { height: 350px; }
+    .three-container { height: 320px; }
 
-    .steps-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+    .steps-grid {
+        grid-template-columns: 1fr;
+        max-width: 520px;
+        margin: 0 auto;
+        gap: 20px;
+    }
 
-    .detect-wrapper { grid-template-columns: 1fr; }
+    .detect-wrapper {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
 
     .insights-grid { grid-template-columns: repeat(2, 1fr); }
     .stats-row { grid-template-columns: repeat(2, 1fr); }
     .diseases-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .section-header { margin-bottom: 48px; }
 }
 
+/* ===== RESPONSIVE — MOBILE ===== */
 @media (max-width: 768px) {
     :root {
-        --section-padding: 64px;
-        --container-padding: 20px;
+        --section-padding: 56px;
+        --container-padding: 16px;
     }
 
-    .hero-title { letter-spacing: -1px; }
+    /* Disable heavy effects on mobile for performance */
+    .cursor-glow,
+    .hero-bg-shapes { display: none !important; }
+
+    /* Reduce backdrop blur on mobile for perf */
+    .step-card,
+    .insight-card,
+    .stats-card,
+    .result-card,
+    .upload-zone,
+    .disease-card {
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    /* Smoother card transitions on mobile */
+    .step-card,
+    .insight-card,
+    .stats-card,
+    .disease-card {
+        transition: transform 0.4s var(--ease-silk), opacity 0.4s var(--ease-silk) !important;
+    }
+
+    /* Navbar mobile */
+    .navbar { padding: 12px 0; }
+    .navbar.scrolled { padding: 8px 0; }
+    .logo-text { font-size: 19px; }
+    .logo-icon { font-size: 24px; }
+
+    /* Hero mobile */
+    .hero-section {
+        min-height: auto;
+        padding: 100px 0 56px;
+    }
+
+    .hero-container { gap: 24px; }
+
+    .hero-title {
+        font-size: clamp(28px, 8vw, 44px);
+        letter-spacing: -1px;
+        line-height: 1.1;
+    }
+
+    .hero-subtitle {
+        font-size: 15px;
+        line-height: 1.65;
+        max-width: 100%;
+        padding: 0 4px;
+    }
+
+    .hero-badge {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
 
     .hero-actions {
         flex-direction: column;
         width: 100%;
+        gap: 12px;
     }
 
     .btn-primary, .btn-secondary {
         width: 100%;
         justify-content: center;
+        padding: 14px 24px;
+        font-size: 15px;
+        /* Smooth tap feedback */
+        transition: transform 0.2s var(--ease-silk), box-shadow 0.2s var(--ease-silk);
     }
 
     .hero-stats {
-        flex-wrap: wrap;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        width: 100%;
+        padding-top: 8px;
     }
 
     .stat-divider { display: none; }
 
-    .three-container { height: 280px; }
+    .stat-item {
+        text-align: center;
+        padding: 12px 8px;
+        background: var(--bg-glass);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--bg-glass-border);
+    }
 
-    .upload-zone { padding: 40px 24px; }
+    .stat-number { font-size: 24px; }
+    .stat-suffix { font-size: 18px; }
+    .stat-label { font-size: 11px; }
 
-    .result-card { padding: 28px 20px; }
+    .three-container { height: 240px; }
+    .hero-glow { width: 200px; height: 200px; }
 
-    .insights-grid { grid-template-columns: 1fr; }
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .diseases-grid { grid-template-columns: 1fr; }
+    /* Sections mobile */
+    .section-header { margin-bottom: 36px; }
+    .section-tag { font-size: 11px; padding: 5px 12px; letter-spacing: 1px; }
+    .section-title { letter-spacing: -1px; }
+    .section-desc { font-size: 15px; padding: 0 8px; }
 
-    .footer-top { flex-direction: column; gap: 24px; text-align: center; }
-    .footer-tagline { padding-left: 0; }
-    .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
-    .footer-links { flex-wrap: wrap; justify-content: center; }
+    /* Steps mobile */
+    .steps-grid {
+        max-width: 100%;
+        gap: 16px;
+    }
 
-    .scroll-indicator { display: none; }
-}
+    .step-card {
+        padding: 28px 20px;
+        border-radius: var(--radius-md);
+    }
 
-@media (max-width: 480px) {
-    .hero-title {
+    .step-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .step-number { font-size: 36px; top: 12px; right: 16px; }
+    .step-icon { width: 64px; height: 64px; margin-bottom: 16px; }
+    .step-icon svg { width: 36px; height: 36px; }
+    .step-title { font-size: 18px; margin-bottom: 8px; }
+    .step-desc { font-size: 14px; }
+
+    /* Upload mobile */
+    .upload-zone {
+        padding: 36px 20px;
+        border-radius: var(--radius-md);
+    }
+
+    .upload-zone:hover {
+        transform: none;
+    }
+
+    .upload-icon-wrapper {
+        width: 72px;
+        height: 72px;
+        margin-bottom: 16px;
+    }
+
+    .upload-icon-wrapper svg { width: 40px; height: 40px; }
+    .upload-title { font-size: 17px; }
+    .upload-hint { font-size: 14px; }
+    .upload-formats { font-size: 12px; }
+
+    .preview-image { max-height: 220px; }
+    .preview-image-wrapper { border-radius: var(--radius-md); }
+    .preview-image { border-radius: var(--radius-md); }
+
+    .btn-analyze {
+        padding: 16px 24px;
+        font-size: 16px;
+    }
+
+    /* Result mobile */
+    .result-card {
+        padding: 24px 16px;
+        border-radius: var(--radius-md);
+    }
+
+    .result-status-icon { font-size: 44px; }
+    .result-disease { font-size: 22px; }
+    .result-severity { font-size: 11px; padding: 3px 12px; }
+
+    .prediction-item { gap: 8px; font-size: 13px; }
+    .prediction-bar { width: 50px; }
+    .prediction-value { font-size: 13px; min-width: 40px; }
+
+    .prevention-list li {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .btn-reset {
+        padding: 12px 24px;
+        font-size: 14px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Insights mobile */
+    .insights-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-bottom: 40px;
+    }
+
+    .insight-card {
+        padding: 24px 20px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+        text-align: left;
+    }
+
+    .insight-card:hover {
+        transform: none;
+    }
+
+    .insight-icon {
         font-size: 32px;
+        margin-bottom: 0;
+        flex-shrink: 0;
     }
 
-    .section-title {
-        font-size: 28px;
+    .insight-card h3 { font-size: 16px; margin-bottom: 4px; }
+    .insight-card p { font-size: 13px; line-height: 1.5; }
+
+    /* Stats mobile */
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 40px;
     }
 
-    .stats-number {
-        font-size: 32px;
+    .stats-card {
+        padding: 20px 16px;
+        border-radius: var(--radius-md);
     }
 
-    .hero-stats {
+    .stats-card:hover {
+        transform: none;
+    }
+
+    .stats-icon { font-size: 24px; margin-bottom: 8px; }
+    .stats-number { font-size: 32px; }
+    .stats-suffix { font-size: 20px; }
+    .stats-label { font-size: 12px; }
+
+    /* Diseases mobile */
+    .diseases-grid {
+        grid-template-columns: 1fr;
         gap: 12px;
     }
 
-    .stat-item {
-        flex: 1;
-        min-width: 80px;
-        text-align: center;
+    .disease-card {
+        padding: 20px 16px;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 12px;
     }
 
-    .prediction-bar { width: 50px; }
+    .disease-card:hover {
+        transform: none;
+    }
+
+    .disease-indicator {
+        margin-bottom: 0;
+        margin-top: 6px;
+        flex-shrink: 0;
+    }
+
+    .disease-card h4 { font-size: 15px; margin-bottom: 4px; }
+    .disease-card p { font-size: 12px; }
+    .showcase-title { font-size: 22px; margin-bottom: 20px; }
+
+    /* Footer mobile */
+    .footer { padding: 40px 0 28px; }
+    .footer-top {
+        flex-direction: column;
+        gap: 24px;
+        text-align: center;
+        margin-bottom: 28px;
+    }
+    .footer-tagline { padding-left: 0; font-size: 13px; }
+    .footer-bottom {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+        font-size: 12px;
+    }
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+    }
+    .footer-links a { font-size: 13px; }
+
+    .scroll-indicator { display: none; }
+
+    /* Mobile scroll snap for better feel */
+    html {
+        scroll-padding-top: 60px;
+    }
+
+    /* Smoother animations on mobile */
+    @keyframes resultSlideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+}
+
+/* ===== RESPONSIVE — SMALL MOBILE ===== */
+@media (max-width: 400px) {
+    :root {
+        --section-padding: 44px;
+        --container-padding: 14px;
+    }
+
+    .hero-section { padding: 88px 0 40px; }
+
+    .hero-title {
+        font-size: 26px;
+        letter-spacing: -0.5px;
+    }
+
+    .hero-subtitle { font-size: 14px; }
+
+    .hero-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .stat-item { padding: 10px 4px; }
+    .stat-number { font-size: 20px; }
+    .stat-suffix { font-size: 14px; }
+    .stat-label { font-size: 10px; }
+
+    .three-container { height: 200px; }
+
+    .section-title { font-size: 24px; }
+    .section-desc { font-size: 14px; }
+
+    .step-card { padding: 24px 16px; }
+    .step-number { font-size: 28px; }
+    .step-title { font-size: 17px; }
+
+    .upload-zone { padding: 28px 16px; }
+    .upload-icon-wrapper { width: 60px; height: 60px; }
+    .upload-title { font-size: 16px; }
+
+    .result-card { padding: 20px 14px; }
+    .result-disease { font-size: 20px; }
+    .result-status-icon { font-size: 36px; }
+
+    .stats-number { font-size: 28px; }
+    .stats-suffix { font-size: 18px; }
+
+    .insight-card { padding: 20px 14px; gap: 12px; }
+    .insight-icon { font-size: 28px; }
+
+    .btn-primary, .btn-secondary {
+        padding: 13px 20px;
+        font-size: 14px;
+    }
+
+    .btn-analyze { padding: 14px 20px; font-size: 15px; }
+}
+
+/* ===== RESPONSIVE — LANDSCAPE PHONE ===== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero-section {
+        min-height: auto;
+        padding: 80px 0 40px;
+    }
+
+    .hero-container {
+        grid-template-columns: 1fr 1fr;
+        text-align: left;
+    }
+
+    .hero-content { align-items: flex-start; }
+    .hero-visual { order: 0; }
+    .three-container { height: 220px; }
+    .hero-title { font-size: 28px; }
+    .hero-stats { justify-content: flex-start; }
+}
+
+/* ===== GPU SMOOTHNESS FOR ALL ===== */
+.step-card,
+.insight-card,
+.stats-card,
+.disease-card,
+.upload-zone,
+.result-card,
+.btn-primary,
+.btn-secondary,
+.nav-cta,
+.hero-visual {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* ===== SMOOTH TOUCH INTERACTIONS ===== */
+@media (hover: none) and (pointer: coarse) {
+    /* Disable hover transforms on touch devices — use active instead */
+    .step-card:hover,
+    .insight-card:hover,
+    .stats-card:hover,
+    .disease-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .step-card:active,
+    .insight-card:active,
+    .stats-card:active,
+    .disease-card:active {
+        transform: scale(0.97);
+        transition: transform 0.15s var(--ease-silk);
+    }
+
+    .btn-primary:hover {
+        transform: none;
+        box-shadow: 0 4px 20px rgba(255, 69, 58, 0.3);
+    }
+
+    .btn-primary:active {
+        transform: scale(0.96);
+        transition: transform 0.12s var(--ease-silk);
+    }
+
+    .btn-secondary:hover {
+        transform: none;
+    }
+
+    .btn-secondary:active {
+        transform: scale(0.96);
+    }
+
+    .upload-zone:hover {
+        transform: none;
+    }
+
+    .upload-zone:active {
+        transform: scale(0.98);
+        border-color: var(--accent-red);
+    }
+}
+
+/* ===== PREFERS REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
 /* ===== UTILITY ANIMATIONS ===== */
