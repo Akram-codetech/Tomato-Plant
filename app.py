@@ -1,13 +1,14 @@
 import os
 
 # Use legacy Keras 2 for compatibility with models trained on TF 2.15
-os.environ["TF_USE_LEGACY_KERAS"] = "1"
+
 
 import uuid
 import numpy as np
 import cv2
 import tensorflow as tf
-from tensorflow.keras.applications.efficientnet import preprocess_input
+from tensorflow.keras.applications.efficientnet import preprocess_input # type: ignore
+
 from flask import Flask, render_template, request, jsonify
 
 # ==============================
@@ -197,5 +198,4 @@ def predict():
 # RUN
 # ==============================
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
